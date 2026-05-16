@@ -1,0 +1,14 @@
+_target_: src.model.Discriminators.waveform.Discriminator
+
+downsamples: [1, 2, 4]
+
+avg_ker_sizes: [4, 4]
+avg_strides: [2, 2]
+avg_paddings: [1, 1]
+
+channels: [1, 16, 64, 256, 1024, 1024, 1024, 1]
+kernel_sizes: [15, 41, 41, 41, 41, 5, 3]
+strides: [1, 4, 4, 4, 4, 1, 1]
+groups: [1, 4, 16, 64, 256, 1, 1]
+
+neg_slope: 0.2

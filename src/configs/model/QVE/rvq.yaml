@@ -1,0 +1,7 @@
+_target_: src.model.QVE.quantizer.rvq
+
+embedding_dim: ${model.embedding_dim}
+num_quantizers: 8
+codebook_size: 1024
+decay: 0.99
+dead_code_threshold: 2.0

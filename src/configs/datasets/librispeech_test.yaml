@@ -1,0 +1,7 @@
+test:
+  _target_: src.datasets.librispeech.LibriSpeechDataset
+  split: "test-clean"
+  sample_rate: 16000
+  name: "test-clean"
+  shuffle_index: false
+  instance_transforms: null

@@ -1,0 +1,17 @@
+train:
+  _target_: src.datasets.librispeech.LibriSpeechDataset
+  split: "train-clean-100"
+  sample_rate: 16000
+  name: "train-clean-100"
+  limit: 12
+  shuffle_index: false
+  instance_transforms: null
+
+val:
+  _target_: src.datasets.librispeech.LibriSpeechDataset
+  split: "train-clean-100"
+  sample_rate: 16000
+  name: "train-clean-100"
+  limit: 12
+  shuffle_index: false
+  instance_transforms: null

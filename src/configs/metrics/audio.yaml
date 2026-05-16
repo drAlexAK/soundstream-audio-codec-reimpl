@@ -1,0 +1,19 @@
+device: "auto"
+sample_rate: 16000
+
+train: []
+
+inference:
+  - _target_: src.metrics.STOIMetric
+    metric:
+      _target_: torch_stoi.NegSTOILoss
+      sample_rate: ${metrics.sample_rate}
+    device: ${metrics.device}
+    name: "STOI"
+
+  - _target_: src.metrics.NISQAMetric
+    metric:
+      _target_: torchmetrics.audio.NonIntrusiveSpeechQualityAssessment
+      fs: ${metrics.sample_rate}
+    device: ${metrics.device}
+    name: "NISQA"

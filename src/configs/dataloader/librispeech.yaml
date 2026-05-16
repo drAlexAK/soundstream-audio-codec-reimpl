@@ -1,0 +1,33 @@
+train:
+  _target_: torch.utils.data.DataLoader
+  batch_size: 12
+  num_workers: 2
+  pin_memory: true
+  collate_fn:
+    _target_: src.datasets.collate.TrainCollate
+    crop_time: 0.5
+    sample_rate: 16000
+
+val_tiny:
+  _target_: torch.utils.data.DataLoader
+  batch_size: 12
+  num_workers: 2
+  pin_memory: true
+  collate_fn:
+    _target_: src.datasets.collate.InferenceCollate
+
+val:
+  _target_: torch.utils.data.DataLoader
+  batch_size: 12
+  num_workers: 2
+  pin_memory: true
+  collate_fn:
+    _target_: src.datasets.collate.InferenceCollate
+
+test:
+  _target_: torch.utils.data.DataLoader
+  batch_size: 12
+  num_workers: 2
+  pin_memory: true
+  collate_fn:
+    _target_: src.datasets.collate.InferenceCollate

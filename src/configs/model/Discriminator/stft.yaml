@@ -1,0 +1,18 @@
+_target_: src.model.Discriminators.stft.STFTDiscriminator
+
+w: 1024
+h: 256
+
+kernel_pre_size: [7, 7]
+kernel_in_size: [3, 3]
+channels: [32, 64, 128, 128, 256, 256, 512]
+ms: [2, 2, 1, 2, 1, 2]
+strides:
+  - [1, 2]
+  - [2, 2]
+  - [1, 2]
+  - [2, 2]
+  - [1, 2]
+  - [2, 2]
+
+neg_slope: 0.2

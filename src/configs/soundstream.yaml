@@ -1,0 +1,64 @@
+defaults:
+  - model: generator
+  - model/Discriminator@discriminator.waveform: waveform
+  - model/Discriminator@discriminator.stft: stft
+  - writer: cometml
+  - metrics: audio
+  - datasets: librispeech
+  - dataloader: librispeech
+  - transforms: audio
+  - _self_
+
+generator_optimizer:
+  _target_: torch.optim.Adam
+  lr: 1e-4
+
+discriminator_optimizer:
+  _target_: torch.optim.Adam
+  lr: 1e-4
+
+generator_lr_scheduler:
+  _target_: torch.optim.lr_scheduler.ConstantLR
+  factor: 1.0
+  total_iters: 1000000000
+
+discriminator_lr_scheduler:
+  _target_: torch.optim.lr_scheduler.ConstantLR
+  factor: 1.0
+  total_iters: 1000000000
+
+generator_loss_function:
+  _target_: src.loss.SoundStreamGeneratorLoss
+  lambda_adv: 1.0
+  lambda_feat: 100.0
+  lambda_rec: 1.0
+  scales: [2048, 1024, 512, 256, 128, 64]
+  n_mels: 64
+
+discriminator_loss_function:
+  _target_: src.loss.SoundStreamDiscriminatorLoss
+
+writer:
+  loss_names:
+    - loss
+    - adv_loss
+    - feat_loss
+    - rec_loss
+    - discriminator_loss
+    - real_loss
+    - fake_loss
+
+trainer:
+  n_epochs: 50
+  epoch_len: 1000
+  log_step: ${trainer.epoch_len}
+  samples: 5
+  device_tensors: ["data_object", "length"]
+  resume_from: null
+  device: auto
+  override: True
+  monitor: "off"
+  save_period: 5
+  early_stop: ${trainer.n_epochs}
+  save_dir: "saved"
+  seed: 1

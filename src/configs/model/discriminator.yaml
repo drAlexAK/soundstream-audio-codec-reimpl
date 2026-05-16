@@ -1,0 +1,5 @@
+defaults:
+  - /model/Generator/encoder@encoder
+  - /model/QVE/rvq@quantizer
+  - /model/Generator/decoder@decoder
+  - _self_

@@ -1,0 +1,4 @@
+defaults:
+  - soundstream
+  - override /datasets: librispeech_onebatch
+  - override /model/QVE@model.quantizer: identity
