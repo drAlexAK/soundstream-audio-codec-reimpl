@@ -162,7 +162,11 @@ class BaseTrainer:
         and saving the best checkpoint).
         """
         not_improved_count = 0
-        for epoch in range(self.start_epoch, self.epochs + 1):
+        for epoch in tqdm(
+            range(self.start_epoch, self.epochs + 1),
+            desc="epochs",
+            total=self.epochs - self.start_epoch + 1,
+        ):
             self._last_epoch = epoch
             result = self._train_epoch(epoch)
 
@@ -172,7 +176,7 @@ class BaseTrainer:
 
             # print logged information to the screen
             for key, value in logs.items():
-                self.logger.info(f"    {key:15s}: {value}")
+                self.logger.info(f"    {key: 15s}: {value}")
 
             # evaluate model performance according to configured metric,
             # save best checkpoint as model_best
