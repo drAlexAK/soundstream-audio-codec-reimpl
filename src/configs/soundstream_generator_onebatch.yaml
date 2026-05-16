@@ -1,5 +1,6 @@
 defaults:
   - soundstream_onebatch_identity
+  - override /dataloader: librispeech_generator_onebatch
   - _self_
 
 generator_loss_function:
@@ -25,11 +26,3 @@ datasets:
   val:
     limit: 6
     shuffle_index: false
-
-dataloader:
-  train:
-    batch_size: 6
-    collate_fn:
-      _target_: src.datasets.collate.InferenceCollate
-  val:
-    batch_size: 6
