@@ -1,0 +1,31 @@
+defaults:
+  - soundstream_onebatch_identity
+  - _self_
+
+generator_loss_function:
+  lambda_adv: 0.0
+  lambda_feat: 0.0
+  lambda_rec: 1.0
+
+discriminator_optimizer:
+  lr: 0.0
+
+trainer:
+  epoch_len: 5
+  log_step: 1
+
+datasets:
+  train:
+    limit: 6
+    shuffle_index: false
+  val:
+    limit: 6
+    shuffle_index: false
+
+dataloader:
+  train:
+    batch_size: 6
+    collate_fn:
+      _target_: src.datasets.collate.InferenceCollate
+  val:
+    batch_size: 6
