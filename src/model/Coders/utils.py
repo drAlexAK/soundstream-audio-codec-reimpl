@@ -42,7 +42,7 @@ class Conv1DTranspose(nn.Module):
             stride=stride,
             dilation=dilation,
         )
-        self.to_pad = (kernel_size - 1) * dilation
+        self.to_pad = 0
 
     def forward(self, x):
         x_ = nn.functional.pad(x, (self.to_pad, 0), mode="constant", value=0)
