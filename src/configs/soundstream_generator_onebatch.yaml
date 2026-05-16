@@ -7,12 +7,16 @@ generator_loss_function:
   lambda_feat: 0.0
   lambda_rec: 1.0
 
+generator_optimizer:
+  lr: 1e-3
+
 discriminator_optimizer:
   lr: 0.0
 
 trainer:
-  epoch_len: 5
-  log_step: 1
+  n_epochs: 20
+  epoch_len: 500
+  log_step: 50
 
 datasets:
   train:
