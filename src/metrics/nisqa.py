@@ -1,4 +1,5 @@
 import torch
+
 from src.metrics.base_metric import BaseMetric
 
 
@@ -12,6 +13,5 @@ class NISQAMetric(BaseMetric):
     def __call__(self, result, length, **kwargs):
         loss = []
         for i in range(result.shape[0]):
-            l = length[i]
-            loss.append(self.metric(result[i, 0, :l])[0])
+            loss.append(self.metric(result[i, 0, : length[i]])[0])
         return torch.stack(loss).mean()

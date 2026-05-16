@@ -1,1 +1,1 @@
-from src.loss.soundstream import SoundStreamGeneratorLoss, SoundStreamDiscriminatorLoss
+from src.loss.soundstream import SoundStreamDiscriminatorLoss, SoundStreamGeneratorLoss

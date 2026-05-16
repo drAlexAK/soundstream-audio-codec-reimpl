@@ -146,7 +146,10 @@ class Trainer(BaseTrainer):
     @torch.no_grad()
     def _get_discriminator_grad_norm(self, norm_type=2):
         parameters = [p for p in self.discriminators.parameters() if p.grad is not None]
-        total_norm = torch.norm(torch.stack([torch.norm(p.grad.detach(), norm_type) for p in parameters]), norm_type)
+        total_norm = torch.norm(
+            torch.stack([torch.norm(p.grad.detach(), norm_type) for p in parameters]),
+            norm_type,
+        )
         return total_norm.item()
 
     def _log_batch(self, batch_idx, batch, mode="train"):

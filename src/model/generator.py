@@ -2,7 +2,15 @@ from torch import nn
 
 
 class SoundStream(nn.Module):
-    def __init__(self, embedding_dim, encoder_channels, decoder_channels, encoder, quantizer, decoder):
+    def __init__(
+        self,
+        embedding_dim,
+        encoder_channels,
+        decoder_channels,
+        encoder,
+        quantizer,
+        decoder,
+    ):
         super().__init__()
         self.embedding_dim = embedding_dim
         self.encoder_channels = encoder_channels
@@ -22,7 +30,9 @@ class SoundStream(nn.Module):
         Model prints with the number of parameters.
         """
         all_parameters = sum([p.numel() for p in self.parameters()])
-        trainable_parameters = sum([p.numel() for p in self.parameters() if p.requires_grad])
+        trainable_parameters = sum(
+            [p.numel() for p in self.parameters() if p.requires_grad]
+        )
 
         result_info = super().__str__()
         result_info = result_info + f"\nAll parameters: {all_parameters}"

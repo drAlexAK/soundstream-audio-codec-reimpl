@@ -1,4 +1,5 @@
 import torch
+
 from src.metrics.base_metric import BaseMetric
 
 
@@ -12,6 +13,7 @@ class STOIMetric(BaseMetric):
     def __call__(self, result, data_object, length, **kwargs):
         loss = []
         for i in range(result.shape[0]):
-            l = length[i]
-            loss.append(-self.metric(data_object[i, 0, :l], result[i, 0, :l]))
+            loss.append(
+                -self.metric(data_object[i, 0, : length[i]], result[i, 0, : length[i]])
+            )
         return torch.stack(loss).mean()

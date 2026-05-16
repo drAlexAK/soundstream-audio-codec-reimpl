@@ -42,13 +42,20 @@ def main(config):
     model = instantiate(config.model).to(device)
     logger.info(model)
 
-    discriminators = nn.ModuleDict({name: instantiate(disc_config) for name, disc_config in config.discriminator.items()}).to(device)
+    discriminators = nn.ModuleDict(
+        {
+            name: instantiate(disc_config)
+            for name, disc_config in config.discriminator.items()
+        }
+    ).to(device)
 
     logger.info(discriminators)
 
     # get function handles of losses and metrics
     generator_loss_function = instantiate(config.generator_loss_function).to(device)
-    discriminator_loss_function = instantiate(config.discriminator_loss_function).to(device)
+    discriminator_loss_function = instantiate(config.discriminator_loss_function).to(
+        device
+    )
     metrics = instantiate(config.metrics)
 
     # build optimizers, learning rate schedulers
@@ -56,9 +63,15 @@ def main(config):
     optimizer = instantiate(config.generator_optimizer, params=trainable_params)
     lr_scheduler = instantiate(config.generator_lr_scheduler, optimizer=optimizer)
 
-    discriminator_params = filter(lambda p: p.requires_grad, discriminators.parameters())
-    discriminator_optimizer = instantiate(config.discriminator_optimizer, params=discriminator_params)
-    discriminator_lr_scheduler = instantiate(config.discriminator_lr_scheduler, optimizer=discriminator_optimizer)
+    discriminator_params = filter(
+        lambda p: p.requires_grad, discriminators.parameters()
+    )
+    discriminator_optimizer = instantiate(
+        config.discriminator_optimizer, params=discriminator_params
+    )
+    discriminator_lr_scheduler = instantiate(
+        config.discriminator_lr_scheduler, optimizer=discriminator_optimizer
+    )
 
     # epoch_len = number of iterations for iteration-based training
     # epoch_len = None or len(dataloader) for epoch-based training

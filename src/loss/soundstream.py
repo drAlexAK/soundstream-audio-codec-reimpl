@@ -30,7 +30,14 @@ class MultiScaleSpectralLoss(nn.Module):
         super().__init__()
         self.eps = 1e-9
         self.alphas = [(s / 2) ** 0.5 for s in scales]
-        self.mels = nn.ModuleList([torchaudio.transforms.MelSpectrogram(n_fft=s, win_length=s, hop_length=s // 4, n_mels=n_mels) for s in scales])
+        self.mels = nn.ModuleList(
+            [
+                torchaudio.transforms.MelSpectrogram(
+                    n_fft=s, win_length=s, hop_length=s // 4, n_mels=n_mels
+                )
+                for s in scales
+            ]
+        )
 
     def forward(self, x, x_hat, **batch):
         x = x.squeeze(1)
@@ -40,7 +47,9 @@ class MultiScaleSpectralLoss(nn.Module):
             real = mel(x)
             fake = mel(x_hat)
             loss = loss + (real - fake).abs().mean()
-            loss = loss + alpha * torch.sqrt(((torch.log(real + self.eps) - torch.log(fake + self.eps)) ** 2).mean())
+            loss = loss + alpha * torch.sqrt(
+                ((torch.log(real + self.eps) - torch.log(fake + self.eps)) ** 2).mean()
+            )
         return loss / len(self.mels)
 
 
@@ -55,9 +64,9 @@ class SoundStreamGeneratorLoss(nn.Module):
         self.lrec = lambda_rec
 
     def forward(self, x, x_hat, fake_logits, real_features, fake_features, **batch):
-        l = min(x.shape[-1], x_hat.shape[-1])
-        x = x[..., :l]
-        x_hat = x_hat[..., :l]
+        crop_len = min(x.shape[-1], x_hat.shape[-1])
+        x = x[..., :crop_len]
+        x_hat = x_hat[..., :crop_len]
 
         cropped_real_features = []
         cropped_fake_features = []
@@ -94,9 +103,9 @@ class SoundStreamDiscriminatorLoss(nn.Module):
         cropped_fake_logits = []
 
         for r, f in zip(real_logits, fake_logits):
-            l = min(r.shape[-1], f.shape[-1])
-            cropped_real_logits.append(r[..., :l])
-            cropped_fake_logits.append(f[..., :l])
+            crop_len = min(r.shape[-1], f.shape[-1])
+            cropped_real_logits.append(r[..., :crop_len])
+            cropped_fake_logits.append(f[..., :crop_len])
 
         loss, real_loss, fake_loss = self.adv(cropped_real_logits, cropped_fake_logits)
 

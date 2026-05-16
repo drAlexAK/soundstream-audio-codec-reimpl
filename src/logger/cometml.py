@@ -1,7 +1,5 @@
 from datetime import datetime
 
-import comet_ml
-
 import numpy as np
 import pandas as pd
 
