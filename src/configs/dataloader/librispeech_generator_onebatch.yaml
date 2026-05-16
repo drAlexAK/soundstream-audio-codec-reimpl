@@ -4,7 +4,9 @@ train:
   num_workers: 2
   pin_memory: true
   collate_fn:
-    _target_: src.datasets.collate.InferenceCollate
+    _target_: src.datasets.collate.OneBatchCollate
+    crop_time: 0.5
+    sample_rate: 16000
 
 val:
   _target_: torch.utils.data.DataLoader
@@ -12,4 +14,6 @@ val:
   num_workers: 2
   pin_memory: true
   collate_fn:
-    _target_: src.datasets.collate.InferenceCollate
+    _target_: src.datasets.collate.OneBatchCollate
+    crop_time: 0.5
+    sample_rate: 16000

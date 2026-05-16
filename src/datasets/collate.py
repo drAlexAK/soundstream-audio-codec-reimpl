@@ -48,3 +48,28 @@ class InferenceCollate:
             [elem["original_sample_rate"] for elem in dataset_items]
         )
         return result_batch
+
+
+class OneBatchCollate:
+    def __init__(self, crop_time, sample_rate):
+        self.crop_len = int(crop_time * sample_rate)
+
+    def crop_and_pad(self, data):
+        if data.shape[-1] < self.crop_len:
+            data = data.repeat(1, self.crop_len // data.shape[-1] + 1)
+
+        start = 0
+        return data[:, start : start + self.crop_len]
+
+    def __call__(self, dataset_items):
+        result_batch = dict()
+        result_batch["data_object"] = torch.stack(
+            [self.crop_and_pad(elem["data_object"]) for elem in dataset_items]
+        )
+        result_batch["length"] = torch.tensor(
+            [elem["length"] for elem in dataset_items]
+        )
+        result_batch["original_sample_rate"] = torch.tensor(
+            [elem["original_sample_rate"] for elem in dataset_items]
+        )
+        return result_batch
