@@ -128,7 +128,10 @@ class Trainer(BaseTrainer):
             metrics.update(loss_name, batch[loss_name].item())
 
         for met in metric_funcs:
-            metrics.update(met.name, met(**batch))
+            value = met(**batch)
+            if torch.is_tensor(value):
+                value = value.item()
+            metrics.update(met.name, value)
         return batch
 
     def _run_discriminators(self, audio):

@@ -12,8 +12,8 @@ class STOIMetric(BaseMetric):
 
     def __call__(self, result, data_object, length, **kwargs):
         loss = []
+        crop_len = min(result.shape[-1], data_object.shape[-1])
         for i in range(result.shape[0]):
-            crop_len = min(length[i], result.shape[-1])
             loss.append(
                 -self.metric(data_object[i, 0, :crop_len], result[i, 0, :crop_len])
             )
