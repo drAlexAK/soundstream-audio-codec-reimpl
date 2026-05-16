@@ -48,7 +48,7 @@ class Trainer(BaseTrainer):
         self.discriminator_criterion = discriminator_criterion
         self.discriminator_optimizer = discriminator_optimizer
         self.discriminator_lr_scheduler = discriminator_lr_scheduler
-        self.sample_rate = config.dataloader.train.collate_fn.sample_rate
+        self.sample_rate = config.datasets.train.sample_rate
 
     def process_batch(self, batch, metrics: MetricTracker):
         """
