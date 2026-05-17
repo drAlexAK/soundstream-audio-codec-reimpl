@@ -54,7 +54,15 @@ class MultiScaleSpectralLoss(nn.Module):
 
 
 class SoundStreamGeneratorLoss(nn.Module):
-    def __init__(self, lambda_adv, lambda_feat, lambda_rec, scales, n_mels):
+    def __init__(
+        self,
+        lambda_adv,
+        lambda_feat,
+        lambda_rec,
+        lambda_commit,
+        scales,
+        n_mels,
+    ):
         super().__init__()
         self.adv = AdversarialGeneratorLoss()
         self.feat = FeatureMatchingLoss()
@@ -62,6 +70,7 @@ class SoundStreamGeneratorLoss(nn.Module):
         self.ladv = lambda_adv
         self.lfeat = lambda_feat
         self.lrec = lambda_rec
+        self.lcommit = lambda_commit
 
     def forward(self, x, x_hat, fake_logits, real_features, fake_features, **batch):
         crop_len = min(x.shape[-1], x_hat.shape[-1])
@@ -84,12 +93,19 @@ class SoundStreamGeneratorLoss(nn.Module):
         adv = self.adv(fake_logits)
         feat = self.feat(cropped_real_features, cropped_fake_features)
         rec = self.rec(x, x_hat)
+        commit = F.mse_loss(batch["encoded"], batch["quantized"].detach())
 
         return {
-            "loss": self.ladv * adv + self.lfeat * feat + self.lrec * rec,
+            "loss": (
+                self.ladv * adv
+                + self.lfeat * feat
+                + self.lrec * rec
+                + self.lcommit * commit
+            ),
             "adv_loss": adv,
             "feat_loss": feat,
             "rec_loss": rec,
+            "commitment_loss": commit,
         }
 
 

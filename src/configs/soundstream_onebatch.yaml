@@ -1,0 +1,8 @@
+defaults:
+  - soundstream
+  - override /datasets: librispeech_onebatch
+  - override /dataloader: librispeech_generator_onebatch
+  - _self_
+
+writer:
+  run_name: soundstream_onebatch

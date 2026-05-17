@@ -1,4 +1,4 @@
-_target_: src.model.QVE.quantizer.rvq
+_target_: src.model.QVE.quantizer.RVQ
 
 embedding_dim: ${model.embedding_dim}
 num_quantizers: 8
