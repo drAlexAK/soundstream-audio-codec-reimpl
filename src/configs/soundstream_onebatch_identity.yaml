@@ -1,4 +1,8 @@
 defaults:
   - soundstream
   - override /datasets: librispeech_onebatch
+  - override /dataloader: librispeech_generator_onebatch
   - override /model/QVE@model.quantizer: identity
+
+writer:
+  run_name: soundstream_onebatch_identity

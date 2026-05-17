@@ -32,6 +32,7 @@ generator_loss_function:
   lambda_adv: 1.0
   lambda_feat: 100.0
   lambda_rec: 1.0
+  lambda_commit: 1.0
   scales: [2048, 1024, 512, 256, 128, 64]
   n_mels: 64
 
@@ -39,19 +40,21 @@ discriminator_loss_function:
   _target_: src.loss.SoundStreamDiscriminatorLoss
 
 writer:
+  run_name: soundstream
   loss_names:
     - loss
     - adv_loss
     - feat_loss
     - rec_loss
+    - commitment_loss
     - discriminator_loss
     - real_loss
     - fake_loss
 
 trainer:
-  n_epochs: 50
-  epoch_len: 1000
-  log_step: ${trainer.epoch_len}
+  n_epochs: 150
+  epoch_len: 300
+  log_step: 10
   samples: 5
   device_tensors: ["data_object", "length"]
   resume_from: null

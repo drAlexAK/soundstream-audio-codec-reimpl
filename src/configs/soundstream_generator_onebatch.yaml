@@ -3,6 +3,10 @@ defaults:
   - override /dataloader: librispeech_generator_onebatch
   - _self_
 
+
+writer:
+  run_name: generator_only_onebatch_identity
+
 generator_loss_function:
   lambda_adv: 0.0
   lambda_feat: 0.0
