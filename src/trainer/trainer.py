@@ -30,6 +30,12 @@ class Trainer(BaseTrainer):
         skip_oom=True,
         batch_transforms=None,
     ):
+        self.discriminators = discriminators
+        self.discriminator_criterion = discriminator_criterion
+        self.discriminator_optimizer = discriminator_optimizer
+        self.discriminator_lr_scheduler = discriminator_lr_scheduler
+        self.sample_rate = config.datasets.train.sample_rate
+
         super().__init__(
             model=model,
             criterion=criterion,
@@ -45,11 +51,6 @@ class Trainer(BaseTrainer):
             skip_oom=skip_oom,
             batch_transforms=batch_transforms,
         )
-        self.discriminators = discriminators
-        self.discriminator_criterion = discriminator_criterion
-        self.discriminator_optimizer = discriminator_optimizer
-        self.discriminator_lr_scheduler = discriminator_lr_scheduler
-        self.sample_rate = config.datasets.train.sample_rate
 
     def process_batch(self, batch, metrics: MetricTracker):
         """
