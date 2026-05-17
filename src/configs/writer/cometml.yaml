@@ -1,8 +1,8 @@
 _target_: src.logger.CometMLWriter
-project_name: "pytorch_template"
-workspace: null
-run_name: "testing"
-mode: "online"
+api_key: ${oc.env:COMET_API_KEY}
+workspace: ${oc.env:COMET_WORKSPACE}
+project_name: ${oc.env:COMET_PROJECT_NAME}
+mode: ${oc.env:COMET_MODE,online}
 loss_names: ["loss"] # which losses to log (useful for multi-loss tasks, s.a. GANs)
 log_checkpoints: False # set to True if you want to log save_dir with checkpoints to W&B
 id_length: 32 # length of the run_id
