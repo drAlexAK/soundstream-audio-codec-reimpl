@@ -36,22 +36,25 @@ class VectorQuantizer(nn.Module):
         quantized = F.embedding(codes, self.emb)
 
         if self.training:
-            frequency = one_hot.sum(dim=0)
-            emb_sum = one_hot.T @ x_t
+            with torch.no_grad():
+                frequency = one_hot.sum(dim=0)
+                emb_sum = one_hot.T @ x_t
 
-            self.frequency *= self.decay
-            self.frequency += frequency * (1 - self.decay)
-            self.embeddings_avg *= self.decay
-            self.embeddings_avg += emb_sum * (1 - self.decay)
+                self.frequency *= self.decay
+                self.frequency += frequency * (1 - self.decay)
+                self.embeddings_avg *= self.decay
+                self.embeddings_avg += emb_sum * (1 - self.decay)
 
-            self.emb = self.embeddings_avg / (self.frequency.unsqueeze(1) + self.eps)
+                self.emb = self.embeddings_avg / (
+                    self.frequency.unsqueeze(1) + self.eps
+                )
 
-            dead_codes = self.frequency < self.dead_code_threshold
-            if dead_codes.sum() > 0:
-                new_emb = self.sample_vectors(x_t, dead_codes.sum().item())
-                self.emb[dead_codes] = new_emb.clone()
-                self.embeddings_avg[dead_codes] = new_emb.clone()
-                self.frequency[dead_codes] = self.dead_code_threshold
+                dead_codes = self.frequency < self.dead_code_threshold
+                if dead_codes.sum() > 0:
+                    new_emb = self.sample_vectors(x_t, dead_codes.sum().item())
+                    self.emb[dead_codes] = new_emb.clone()
+                    self.embeddings_avg[dead_codes] = new_emb.clone()
+                    self.frequency[dead_codes] = self.dead_code_threshold
 
         quantized = quantized.view_as(x_perm)
         quantized = quantized.permute([0, 2, 1]).contiguous()
