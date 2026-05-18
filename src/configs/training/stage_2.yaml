@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - /soundstream
+  - _self_
+
+generator_loss_function:
+  lambda_adv: 0.1
+  lambda_feat: 10.0
+
+trainer:
+  n_epochs: 30
+  resume_from: "checkpoint-epoch12.pth"

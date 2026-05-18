@@ -1,0 +1,10 @@
+# @package _global_
+
+defaults:
+  - /soundstream
+  - _self_
+
+trainer:
+  n_epochs: 12
+  save_period: 12
+  resume_from: null
