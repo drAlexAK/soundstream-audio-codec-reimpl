@@ -124,26 +124,27 @@ class Inferencer(BaseTrainer):
 
         if metrics is not None:
             for met in self.metrics["inference"]:
-                metrics.update(met.name, met(**batch))
+                value = met(**batch)
+                if torch.is_tensor(value):
+                    value = value.item()
+                metrics.update(met.name, value)
 
         # Some saving logic. This is an example
         # Use if you need to save predictions on disk
 
-        batch_size = batch["logits"].shape[0]
+        batch_size = batch["result"].shape[0]
         current_id = batch_idx * batch_size
 
         for i in range(batch_size):
-            # clone because of
-            # https://github.com/pytorch/pytorch/issues/1995
-            logits = batch["logits"][i].clone()
-            label = batch["labels"][i].clone()
-            pred_label = logits.argmax(dim=-1)
-
             output_id = current_id + i
+            length = batch["length"][i].item()
 
             output = {
-                "pred_label": pred_label,
-                "label": label,
+                "x": batch["data_object"][i, :, :length].detach().cpu(),
+                "reconstructed_x": batch["result"][i, :, :length].detach().cpu(),
+                "encoded": batch["encoded"][i].detach().cpu(),
+                "quantized": batch["quantized"][i].detach().cpu(),
+                "codes": batch["codes"][i].detach().cpu(),
             }
 
             if self.save_path is not None:
