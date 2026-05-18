@@ -1,13 +1,19 @@
-torch==2.11.0
-torch-stoi==0.2.3
-torchaudio==2.11.0
-torchcodec==0.12.0
-torchmetrics==1.9.0
+torch==2.5.1
+torchaudio==2.5.1
 
-comet_ml
+requests
 hydra-core
-matplotlib
-numpy
 omegaconf
+numpy
 pandas
+matplotlib
 tqdm
+librosa
+soundfile
+pystoi
+torch-stoi
+torchmetrics[audio]
+requests
+comet_ml
+huggingface_hub
+ipywidgets
