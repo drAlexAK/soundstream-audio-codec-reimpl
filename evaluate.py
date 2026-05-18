@@ -4,6 +4,7 @@ import warnings
 import comet_ml
 import hydra
 import torch
+import torchaudio
 from hydra.utils import instantiate
 
 from src.datasets.data_utils import get_dataloaders
@@ -59,6 +60,45 @@ def main(config):
     for part in logs.keys():
         experiment.log_metrics(
             {"{}: {}".format(part, key): value for key, value in logs[part].items()}
+        )
+
+    with torch.no_grad():
+        batch = inferencer.process_batch(
+            0,
+            next(iter(dataloaders["test"])),
+            metrics=None,
+            part="test",
+        )
+
+    mel = torchaudio.transforms.MelSpectrogram(
+        n_fft=1024,
+        win_length=1024,
+        hop_length=256,
+        n_mels=64,
+        power=1.0,
+    ).to(device)
+
+    for i in range(batch["data_object"].shape[0]):
+        length = batch["length"][i].item()
+        x = batch["data_object"][i, :, :length]
+        x_hat = batch["result"][i, :, :length]
+        experiment.log_audio(
+            audio_data=x.detach().cpu().numpy().T,
+            file_name=f"test_source_{i}",
+            sample_rate=config.sample_rate,
+        )
+        experiment.log_audio(
+            audio_data=x_hat.detach().cpu().numpy().T,
+            file_name=f"test_reconstructed_{i}",
+            sample_rate=config.sample_rate,
+        )
+        experiment.log_image(
+            image_data=mel(x).squeeze(0).detach().cpu().numpy(),
+            name=f"test_source_mel_{i}",
+        )
+        experiment.log_image(
+            image_data=mel(x_hat).squeeze(0).detach().cpu().numpy(),
+            name=f"test_reconstructed_mel_{i}",
         )
 
     experiment.end()
