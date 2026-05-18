@@ -33,7 +33,7 @@ class MultiScaleSpectralLoss(nn.Module):
         self.mels = nn.ModuleList(
             [
                 torchaudio.transforms.MelSpectrogram(
-                    n_fft=s, win_length=s, hop_length=s // 4, n_mels=n_mels
+                    n_fft=s, win_length=s, hop_length=s // 4, n_mels=n_mels, power=1.0
                 )
                 for s in scales
             ]
@@ -47,10 +47,16 @@ class MultiScaleSpectralLoss(nn.Module):
             real = mel(x)
             fake = mel(x_hat)
             loss = loss + (real - fake).abs().mean()
-            loss = loss + alpha * torch.sqrt(
-                ((torch.log(real + self.eps) - torch.log(fake + self.eps)) ** 2).mean()
+            loss = (
+                loss
+                + alpha
+                * torch.sqrt(
+                    (
+                        (torch.log(real + self.eps) - torch.log(fake + self.eps)) ** 2
+                    ).sum(dim=1)
+                ).mean()
             )
-        return loss / len(self.mels)
+        return loss
 
 
 class SoundStreamGeneratorLoss(nn.Module):
