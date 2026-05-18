@@ -52,16 +52,16 @@ writer:
     - fake_loss
 
 trainer:
-  n_epochs: 150
-  epoch_len: 300
-  log_step: 10
+  n_epochs: 12
+  epoch_len: null
+  log_step: 100
   samples: 5
   device_tensors: ["data_object", "length"]
   resume_from: null
   device: auto
   override: True
   monitor: "off"
-  save_period: 5
+  save_period: 3
   early_stop: ${trainer.n_epochs}
   save_dir: "saved"
   seed: 1
