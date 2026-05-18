@@ -1,13 +1,16 @@
 defaults:
-  - model: baseline
-  - metrics: example
-  - datasets: example_eval # we do not want to run inference on training data
-  - dataloader: example
-  - transforms: example
+  - model: generator
+  - metrics: audio
+  - datasets: librispeech_test
+  - dataloader: librispeech
+  - transforms: audio
   - _self_
+
+sample_rate: ${datasets.test.sample_rate}
+
 inferencer:
   device_tensors: ["data_object", "length"] # which tensors should be on device (ex. GPU)
   device: auto # device name or "auto"
-  save_path: "librispeech_clean_100"
+  save_path: null
   seed: 1
   from_pretrained: "saved/model_best.pth" # path to the pretrained model
